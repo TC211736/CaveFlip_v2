@@ -1,6 +1,8 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,13 +17,14 @@ public class menuState extends State {
     Rectangle playButtonR;
     Rectangle shopButtonR;
     Rectangle exitButtonR;
+    OrthographicCamera camera;
 
     private Rectangle setPlayButtonR() {
         playButtonR = new Rectangle();
         playButtonR.width = 512;
         playButtonR.height = 256;
         playButtonR.x = 0;
-        playButtonR.y = (MyGdxGame.height / 2) - (shopButton.getHeight() / 3);
+        playButtonR.y = (MyGdxGame.height / 2) - (playButton.getHeight());
         return playButtonR;
     }
 
@@ -30,7 +33,7 @@ public class menuState extends State {
         shopButtonR.width = 512;
         shopButtonR.height = 256;
         shopButtonR.x = (MyGdxGame.width / 2) - (shopButton.getWidth() / 2);
-        shopButtonR.y = (MyGdxGame.height / 2) - (shopButton.getHeight() / 3);
+        shopButtonR.y = (MyGdxGame.height / 2) - (shopButton.getHeight());
         return shopButtonR;
     }
 
@@ -39,7 +42,7 @@ public class menuState extends State {
         exitButtonR.width = 512;
         exitButtonR.height = 256;
         exitButtonR.x = (MyGdxGame.width) - (exitButton.getWidth());
-        exitButtonR.y = (MyGdxGame.height / 2) - (exitButton.getHeight() / 3);
+        exitButtonR.y = (MyGdxGame.height / 2) - (exitButton.getHeight());
         return exitButtonR;
     }
 
@@ -52,16 +55,36 @@ public class menuState extends State {
         playButtonR = setPlayButtonR();
         shopButtonR = setShopButtonR();
         exitButtonR = setExitButtonR();
+        camera = new OrthographicCamera();
+        this.camera = new OrthographicCamera();
+
     }
+
 
     @Override
     public void handleInput() {
+        if (Gdx.input.justTouched()) {
+            gsm.set(new playState(gsm));
+        }
+       /* if (Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            if (playButtonR.contains(touchPos.x, touchPos.y)) {
+                gsm.set(new playState(gsm));
+            } else if (shopButtonR.contains(touchPos.x, touchPos.y)) {
+                gsm.set(new shopState(gsm));
+            } else if (exitButtonR.contains(touchPos.x, touchPos.y)) { //CREATE A STAGE AND ADD ALL VARIABLES TO STAGE - more efficient (you got this bb cakes)
+                System.exit(0);
+            }
+        }
 
+        */
     }
 
     @Override
     public void update(float dt) {
-
+        handleInput();
     }
 
     @Override
@@ -73,19 +96,7 @@ public class menuState extends State {
         sb.draw(exitButton, exitButtonR.x, exitButtonR.y);
         sb.end();
 
-        if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            if (playButtonR.contains(touchPos.x, touchPos.y)){
-                gsm.set(new playState(gsm));
-            } else if (shopButtonR.contains(touchPos.x, touchPos.y)){
-                gsm.set(new shopState(gsm));
-            } else
-            if (exitButtonR.contains(touchPos.x, touchPos.y)) { //CREATE A STAGE AND ADD ALL VARIABLES TO STAGE - more efficient (you got this bb cakes)
-                System.exit(0);
-            }
-        }
+
     }
 
     @Override

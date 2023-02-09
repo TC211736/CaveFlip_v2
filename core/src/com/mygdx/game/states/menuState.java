@@ -56,17 +56,13 @@ public class menuState extends State {
         shopButtonR = setShopButtonR();
         exitButtonR = setExitButtonR();
         camera = new OrthographicCamera();
-        this.camera = new OrthographicCamera();
-
+        camera.setToOrtho(false, MyGdxGame.width, MyGdxGame.height);
     }
 
 
     @Override
     public void handleInput() {
-        if (Gdx.input.justTouched()) {
-            gsm.set(new playState(gsm));
-        }
-       /* if (Gdx.input.isTouched()) {
+       if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
@@ -79,7 +75,7 @@ public class menuState extends State {
             }
         }
 
-        */
+
     }
 
     @Override

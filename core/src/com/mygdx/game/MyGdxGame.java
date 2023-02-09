@@ -8,29 +8,29 @@ import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.menuState;
 
 public class MyGdxGame extends ApplicationAdapter {
-	public static final int width = 1280;
-	public static final int height = 720;
+    public static final int width = 1280;
+    public static final int height = 720;
 
-	public static final String Title = "CaveFlip";
-	private GameStateManager gsm;
-	private SpriteBatch batch;
-	
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		gsm = new GameStateManager();
-		gsm.push(new menuState(gsm));
-	}
+    public static final String Title = "CaveFlip";
+    private GameStateManager gsm;
+    private SpriteBatch batch;
 
-	@Override
-	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		gsm.update(Gdx.graphics.getDeltaTime());
-		gsm.render(batch);
-	}
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        gsm = new GameStateManager();
+        gsm.push(new menuState(gsm));
+    }
 
-	@Override
-	public void dispose () {
-		batch.dispose();
-	}
+    @Override
+    public void render() {
+        ScreenUtils.clear(1, 0, 0, 1);
+        gsm.update(Gdx.graphics.getDeltaTime());
+        gsm.render(batch);
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+    }
 }

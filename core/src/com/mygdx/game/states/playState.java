@@ -21,8 +21,8 @@ public class playState extends State{
         miner = new miner(50,100);
         camera.setToOrtho(false, MyGdxGame.width / 2, MyGdxGame.height / 2);
         background = new Texture("caveBackground7.jpg");
-        stalegtites = new Array<Stalegtite>();
-        for (int i = 0; i < OBJECT_COUNT; i++) {
+        stalegtites = new Array<>();
+        for (int i = 1; i < OBJECT_COUNT; i++) {
             stalegtites.add(new Stalegtite(i * (OBJECT_SPACING + Stalegtite.STALACTITE_WIDTH)));
         }
     }
@@ -39,10 +39,13 @@ public class playState extends State{
         handleInput();
         miner.update(dt);
         camera.position.x = miner.getPos().x + 80;
-
         for(Stalegtite stalegtite : stalegtites) {
-            if(camera.position.x - (camera.viewportWidth / 2) > (stalegtite.getPosTop().x + stalegtite.getStalectite().getWidth()));
-            stalegtite.reposition(stalegtite.getPosTop().x + ((stalegtite.STALACTITE_WIDTH + OBJECT_SPACING) * OBJECT_COUNT));
+            if(camera.position.x - (camera.viewportWidth / 2) > (stalegtite.getPosTop().x + stalegtite.getStalectite().getWidth())) {
+                stalegtite.reposition(stalegtite.getPosTop().x + ((Stalegtite.STALACTITE_WIDTH + OBJECT_SPACING) * OBJECT_COUNT));
+            }
+            if (stalegtite.collides(miner.getBounds())) {
+                gsm.set(new playState(gsm));
+            }
         }
         camera.update();
     }
@@ -53,8 +56,11 @@ public class playState extends State{
         sb.begin();
         sb.draw(background, camera.position.x - (camera.viewportWidth / 2), 0);
         sb.draw(miner.getTexture(), miner.getPos().x, miner.getPos().y);
-        sb.draw(stalegtite.getStalecmite(), stalegtite.getPosTop().x, stalegtite.getPosTop().y);
-        sb.draw(stalegtite.getStalectite(), stalegtite.getPosBot().x, stalegtite.getPosBot().y);
+
+        for(Stalegtite stalegtite : stalegtites) {
+            sb.draw(stalegtite.getStalecmite(), stalegtite.getPosTop().x, stalegtite.getPosTop().y);
+            sb.draw(stalegtite.getStalectite(), stalegtite.getPosBot().x, stalegtite.getPosBot().y);
+        }
         sb.end();
     }
 

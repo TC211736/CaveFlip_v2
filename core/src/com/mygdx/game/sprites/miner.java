@@ -1,6 +1,8 @@
 package com.mygdx.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MyGdxGame;
 
@@ -20,11 +22,18 @@ public class miner {
     private Vector3 pos;
     private Vector3 vel;
     private Texture miner;
+    private Rectangle bounds;
+    private Polygon bounds2;
+
 
     public miner(int x, int y) {
         pos = new Vector3(x, y,0);
         vel = new Vector3(0,0,0);
         miner = new Texture("minerArtv2.png");
+        bounds = new Rectangle(x,y, miner.getWidth(), miner.getHeight());
+        bounds2 = new Polygon();
+        bounds2.setOrigin(x,y);
+        bounds2.setVertices(new float[] {0, 0, 0, miner.getHeight(), miner.getWidth(), 0, miner.getWidth(), miner.getHeight()});
     }
 
     public void update(float dt) {
@@ -50,11 +59,15 @@ public class miner {
             }
             vel.scl(1 / dt);
         }
+        bounds.setPosition(pos.x, pos.y);
     }
 
     public void flip() {
         int temp = GRAVITY;
         GRAVITY = GRAVITYFLIP;
         GRAVITYFLIP = temp;
+    }
+    public Polygon getBounds() {
+        return bounds2;
     }
 }

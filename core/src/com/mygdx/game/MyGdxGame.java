@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.Login.StartScreen;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.menuState;
 
@@ -19,7 +20,7 @@ public class MyGdxGame extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         gsm = new GameStateManager();
-        gsm.push(new menuState(gsm));
+        gsm.push(new StartScreen(gsm));
     }
 
     @Override

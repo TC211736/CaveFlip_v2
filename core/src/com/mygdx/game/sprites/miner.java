@@ -7,36 +7,34 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MyGdxGame;
 
 public class miner {
-    public Vector3 getPos() {
-        return pos;
-    }
-
-
-    public Texture getTexture() {
-        return miner;
-    }
-
     private static int GRAVITY = -15;
     private static final int MOVEMENT = 100;
     private static int GRAVITYFLIP = 15;
     private Vector3 pos;
     private Vector3 vel;
-    private Texture miner;
     private Rectangle bounds;
-    //private animation minerAnimation;
-    //private Texture texture;
+    private animation minerAnimation;
+    private Texture texture;
+
+    public Vector3 getPos() {
+        return pos;
+    }
+
+
+    public TextureRegion getTexture() {
+        return minerAnimation.getFrame();
+    }
 
     public miner(int x, int y) {
         pos = new Vector3(x, y, 0);
         vel = new Vector3(0, 0, 0);
-        miner = new Texture("Textures/minerArt4.png");
-        //texture = new Texture("minerAnimation.png");
-        bounds = new Rectangle(x, y, miner.getWidth() / 3, miner.getHeight());
-       // minerAnimation = new animation(new TextureRegion(texture), 3, 0.5f);
+        texture = new Texture("Textures/minerAnimation.png");
+        bounds = new Rectangle(x, y, (texture.getWidth() / 2) / 3, (texture.getHeight()) / 3);
+        minerAnimation = new animation(new TextureRegion(texture), 2, 0.5f);
     }
 
     public void update(float dt) {
-        //minerAnimation.update(dt);
+        minerAnimation.update(dt);
         if ((pos.y > -1) & (pos.y < (MyGdxGame.height / 2))) {
             vel.add(0, GRAVITY, 0);
             vel.scl(dt);
@@ -49,8 +47,8 @@ public class miner {
                     vel.scl(dt);
                     pos.add(MOVEMENT * dt, vel.y, 0);
                 }
-            } else if (pos.y > (MyGdxGame.height / 2) - miner.getHeight()) {
-                pos.y = (MyGdxGame.height / 2) - miner.getHeight();
+            } else if (pos.y > (MyGdxGame.height / 2) - (texture.getHeight() / 3)) {
+                pos.y = (MyGdxGame.height / 2) - (texture.getHeight() / 3);
                 if (GRAVITY < 0) {
                     vel.add(0, GRAVITY, 0);
                     vel.scl(dt);
@@ -73,6 +71,6 @@ public class miner {
     }
 
     public void dispose() {
-        miner.dispose();
+        texture.dispose();
     }
 }

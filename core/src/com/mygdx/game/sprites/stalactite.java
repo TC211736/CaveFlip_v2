@@ -25,8 +25,8 @@ public class stalactite {
         posTop = new Vector2(x, rand.nextInt(FLUCTUATION) + ROCK_GAP + LOWEST_OPENING);
         posBot = new Vector2(x, posTop.y - ROCK_GAP - stalectite.getHeight());
 
-        boundsTop = new Rectangle(posTop.x, posTop.y, stalectite.getWidth() / 3, stalectite.getHeight() - (stalectite.getHeight() / 2));
-        boundsBot = new Rectangle(posBot.x, posBot.y, stalecmite.getWidth() / 3, stalecmite.getHeight() - (stalecmite.getHeight() / 2));
+        boundsTop = new Rectangle(posTop.x, posTop.y, (stalectite.getWidth() / 3) - 50, stalectite.getHeight() - (stalectite.getHeight() / 2));
+        boundsBot = new Rectangle(posBot.x, posBot.y, (stalecmite.getWidth() / 3) - 50, stalecmite.getHeight() - (stalecmite.getHeight() / 2));
     }
 
     public Texture getStalecmite() {

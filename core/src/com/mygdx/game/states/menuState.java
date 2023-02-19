@@ -62,12 +62,12 @@ public class menuState extends State {
 
     @Override
     public void handleInput() {
-       if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             if (playButtonR.contains(touchPos.x, touchPos.y)) {
-                gsm.set(new playState(gsm));
+                gsm.set(new gameState(gsm));
             } else if (shopButtonR.contains(touchPos.x, touchPos.y)) {
                 gsm.set(new shopState(gsm));
             } else if (exitButtonR.contains(touchPos.x, touchPos.y)) { //CREATE A STAGE AND ADD ALL VARIABLES TO STAGE - more efficient (you got this bb cakes)
@@ -91,7 +91,6 @@ public class menuState extends State {
         sb.draw(shopButton, shopButtonR.x, shopButtonR.y);
         sb.draw(exitButton, exitButtonR.x, exitButtonR.y);
         sb.end();
-
 
     }
 

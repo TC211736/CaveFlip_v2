@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.mygdx.game.SQL.LoginData;
 import com.mygdx.game.SQL.MyJDBC;
+import com.mygdx.game.SQL.PasswordHash;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.State;
 import com.mygdx.game.states.menuState;
@@ -16,6 +18,7 @@ import com.mygdx.game.states.menuState;
 public class RegisterScreen extends State {
     Stage stage;
     Label label;
+    Label error;
     Label usernameLabel;
     Label passwordLabel;
     Label password2Label;
@@ -29,21 +32,72 @@ public class RegisterScreen extends State {
         login.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.set(new menuState(gsm));
+                final boolean usernameExists = usernameExists(username.getText());
+                final boolean passwordEqual = passwordEqual();
+                String hashPassword = hashedPassword(password.getText());
+                if ((!usernameExists) && (passwordEqual)) {
+                    MyJDBC.register(username.getText(), hashPassword);
+                    LoginData setUser = new LoginData();
+                    setUser.setUsername(username.getText());
+                    setUser.setPassword(hashPassword);
+                    System.out.println(setUser.getPassword());
+                    gsm.set(new menuState(gsm));
+                }
             }
         });
         return login;
     }
 
+    public boolean usernameExists(String usernameInput) {
+        boolean usernameExists = false;
+        try {
+            usernameExists = MyJDBC.verifyUsername(usernameInput);
+            if (usernameExists == true) {
+                error.setText("Sorry this username is taken already");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return usernameExists;
+    }
+
+    public String hashedPassword(String password) {
+        String hashedPassword = null;
+        try {
+            hashedPassword = PasswordHash.hash(password);
+        } catch (RuntimeException e) {
+            error.setText("Something went wrong. Please try again.");
+        }
+        return hashedPassword;
+    }
+
+    public boolean passwordEqual() {
+        boolean passwordEqual = false;
+        String hashPassword = hashedPassword(password.getText());
+        String hashPassword2 = hashedPassword(password2.getText());
+        if (hashPassword.equals(hashPassword2)) {
+            passwordEqual = true;
+        } else {
+            error.setText("Passwords do not match");
+        }
+        return passwordEqual;
+    }
+
     private Table setRoot() {
         label = new Label("Please set a Username and Password", skin);
+        error = new Label("", skin);
         usernameLabel = new Label("Please enter a Username", skin);
         passwordLabel = new Label("Please enter a Password", skin);
         password2Label = new Label("Please confirm your Password", skin);
 
         username = new TextField("", skin);
         password = new TextField("", skin);
+        password.setPasswordMode(true);
+        password.setPasswordCharacter('*');
         password2 = new TextField("", skin);
+        password2.setPasswordMode(true);
+        password2.setPasswordCharacter('*');
         Table root = new Table(skin);
         root.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         root.setBackground(skin.getDrawable("custom"));
@@ -57,7 +111,8 @@ public class RegisterScreen extends State {
         root.add(password).left().row();
         root.add(password2Label).left().row();
         root.add(password2).left().row();
-        root.add(login).right();
+        root.add(login).right().row();
+        root.add(error);
         return root;
     }
 
@@ -67,8 +122,6 @@ public class RegisterScreen extends State {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(root);
-        String JDBC = MyJDBC.JDBCConnection();
-
     }
 
 

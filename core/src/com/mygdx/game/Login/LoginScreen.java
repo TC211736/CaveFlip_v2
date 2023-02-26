@@ -1,27 +1,24 @@
 package com.mygdx.game.Login;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.SQL.LoginData;
 import com.mygdx.game.SQL.MyJDBC;
+import com.mygdx.game.SQL.PasswordHash;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.State;
 import com.mygdx.game.states.menuState;
 
+
 public class LoginScreen extends State {
     Stage stage;
     Label label;
+    Label error;
     Label usernameLabel;
     Label passwordLabel;
     TextField username;
@@ -30,22 +27,77 @@ public class LoginScreen extends State {
 
     private TextButton login() {
         TextButton login = new TextButton("Login", skin);
+        final String hashedPassword = hashPassword();
         login.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.set(new menuState(gsm));
+                if (verifyUser() == true) {
+                    LoginData setUser = new LoginData();
+                    setUser.setUsername(username.getText());
+                    setUser.setPassword(hashedPassword);
+                    System.out.println(setUser.getPassword());
+                    gsm.set(new menuState(gsm));
+                } else {
+                    error.setText("Username or Password is incorrect");
+                }
+
             }
         });
         return login;
     }
 
+    public String[] getLogin(String usernameInput, String passwordInput) {
+        String login[] = null;
+        try {
+            login = MyJDBC.login(usernameInput, passwordInput);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return login;
+    }
+
+    public String hashPassword() {
+        String hashedPassword = null;
+
+        try {
+            hashedPassword = PasswordHash.hash(password.getText());
+        } catch (RuntimeException e) {
+            error.setText("Something went wrong. Please try again.");
+        }
+        return hashedPassword;
+    }
+
+
+    public boolean verifyUser() {
+        String hashedPassword = hashPassword();
+        String loginVerify[] = getLogin(username.getText(), hashedPassword);
+        boolean userVerify = false;
+
+        try {
+            if (loginVerify[1].equals(hashedPassword)) {
+                userVerify = true;
+                LoginData username2 = new LoginData();
+                username2.setUsername(username.getText());
+                username2.setPassword(hashedPassword);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return userVerify;
+    }
+
     private Table setRoot() {
         label = new Label("Please set a Username and Password", skin);
+        error = new Label("", skin);
         usernameLabel = new Label("Please enter a Username", skin);
         passwordLabel = new Label("Please enter a Password", skin);
 
         username = new TextField("", skin);
         password = new TextField("", skin);
+        password.setPasswordMode(true);
+        password.setPasswordCharacter('*');
         Table root = new Table(skin);
         root.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         root.setBackground(skin.getDrawable("custom"));
@@ -57,7 +109,8 @@ public class LoginScreen extends State {
         root.add(username).left().row();
         root.add(passwordLabel).left().row();
         root.add(password).left().row();
-        root.add(login).right();
+        root.add(login).right().row();
+        root.add(error);
         return root;
     }
 
@@ -67,8 +120,6 @@ public class LoginScreen extends State {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(root);
-        String JDBC = MyJDBC.JDBCConnection();
-
     }
 
     @Override

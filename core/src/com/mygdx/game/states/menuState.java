@@ -86,7 +86,7 @@ public class menuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(background, 0, 0, MyGdxGame.width, MyGdxGame.height);
+        sb.draw(background, 0, 0);
         sb.draw(playButton, playButtonR.x, playButtonR.y);
         sb.draw(shopButton, shopButtonR.x, shopButtonR.y);
         sb.draw(exitButton, exitButtonR.x, exitButtonR.y);

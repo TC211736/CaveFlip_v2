@@ -13,12 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.State;
 
 public class StartScreen extends State {
-    MyGdxGame game;
     Stage stage;
     private OrthographicCamera camera;
     private Viewport viewport;

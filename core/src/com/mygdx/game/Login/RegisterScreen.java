@@ -48,6 +48,18 @@ public class RegisterScreen extends State {
         return login;
     }
 
+    private TextButton back() {
+        TextButton back = new TextButton("Back", skin);
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gsm.set(new StartScreen(gsm));
+            }
+        });
+        return back;
+    }
+
+
     public boolean usernameExists(String usernameInput) {
         boolean usernameExists = false;
         try {
@@ -104,6 +116,7 @@ public class RegisterScreen extends State {
         root.setFillParent(true);
         //root.debug().defaults().space(6);
         TextButton login = login();
+        TextButton back = back();
         root.add(label).height(100).row();
         root.add(usernameLabel).left().row();
         root.add(username).left().row();
@@ -111,7 +124,8 @@ public class RegisterScreen extends State {
         root.add(password).left().row();
         root.add(password2Label).left().row();
         root.add(password2).left().row();
-        root.add(login).right().row();
+        root.add(login).right();
+        root.add(back).left().row();
         root.add(error);
         return root;
     }

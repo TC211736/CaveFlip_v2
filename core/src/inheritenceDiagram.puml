@@ -1,0 +1,380 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class LoginScreen {
+    - stage: Stage
+    - label: Label
+    - error: Label
+    - usernameLabel: Label
+    - passwordLabel: Label
+    - username: TextField
+    - password: TextField
+    - skin: Skin
+    .. Other private fields ..
+
+    + LoginScreen(gsm: GameStateManager)
+    - setRoot(): Table
+    - login(): TextButton
+    - back(): TextButton
+    - getLogin(usernameInput: String, passwordInput: String): String[]
+    - hashPassword(): String
+    - verifyUser(): boolean
+    + handleInput()
+    + update(dt: float)
+    + render(sb: SpriteBatch)
+    + dispose()
+}
+
+class RegisterScreen {
+
+stage: Stage
+label: Label
+error: Label
+usernameLabel: Label
+passwordLabel: Label
+password2Label: Label
+username: TextField
+password: TextField
+password2: TextField
+skin: Skin
+RegisterScreen(gsm: GameStateManager)
+setRoot(): Table
+login(): TextButton
+back(): TextButton
+usernameExists(usernameInput: String): boolean
+hashedPassword(password: String): String
+passwordEqual(): boolean
+handleInput()
+update(dt: float)
+render(sb: SpriteBatch)
+dispose()
+}
+
+class StartScreen {
+    - game: MyGdxGame
+    - stage: Stage
+    - camera: OrthographicCamera
+    - viewport: Viewport
+    - label: Label
+    - skin: Skin
+    - gsm: GameStateManager
+    + StartScreen(gsm: GameStateManager)
+    - login(): TextButton
+    - register(): TextButton
+    # handleInput()
+    # update(dt: float)
+    # render(sb: SpriteBatch)
+    # dispose()
+}
+
+class LoginData {
+    - username: String
+    - password: String
+    + getUsername(): String
+    + setUsername(username: String): void
+    + getPassword(): String
+    + setPassword(password: String): void
+}
+
+class Constants {
+    - CoinTally: int
+    - score: int
+    - minerTexture: Texture
+    - minerTexturesClass: minerTextures
+    - loginData: LoginData
+    + Constants()
+    + setCoinTally(coinTally: int): void
+    + getCoinTally(): int
+    + getScore(): int
+    + setScore(score: int): void
+    + getMinerTexture(): Texture
+    + setMinerTexture(minerTexture: Texture): void
+}
+
+class minerTextures {
+    - minerOriginal: Texture
+    - minerBlue: Texture
+    - minerGreen: Texture
+    - minerKing: Texture
+    + minerTextures()
+    + getMinerOriginal(): Texture
+    + getMinerBlue(): Texture
+    + getMinerGreen(): Texture
+    + getMinerKing(): Texture
+}
+
+class MyJDBC {
+    -url: String
+    -usernameSQL: String
+    -passwordSQL: String
+
+    +JDBCConnection(): Statement
+    +login(username: String, password: String): String[]
+    +verifyUsername(username: String): boolean
+    +register(username: String, password: String): void
+    +updateCoins(username: String, coinsInGame: int): void
+    +updateHighScore(username: String, score: int): void
+    +getPlayerCoins(username: String): int
+    +getPlayerHighScore(username: String): int
+    + getSelectedItem(username: String): int
+
+}
+
+class animation {
+    -frames: Array<TextureRegion>
+    -maxFrameTime: float
+    -currentFrameTime: float
+    -frameCount: int
+    -frame: int
+
+    +animation(region: TextureRegion, frameCount: int, cycleTime: float)
+    +update(dt: float): void
+    +getFrame(): TextureRegion
+}
+
+class coin {
+    - coinTexture : Texture
+    - boundsNew : Polygon
+    - position : Vector2
+    - rand : Random
+    - generator : FreeTypeFontGenerator
+    - parameter : FreeTypeFontGenerator.FreeTypeFontParameter
+    - font12 : BitmapFont
+    - coinTextPosition : Vector2
+    - FLUCTUATION : int
+    - COINGAP : int
+    - COINWIDTH : static final int
+    + getPos() : Vector2
+    + coin(float x)
+    + reposition(float x) : void
+    + collides(Polygon player) : boolean
+    + getBoundsNew() : Polygon
+    + getFont() : BitmapFont
+    + getCoinTextPosition() : Vector2
+    + getTexture() : Texture
+    + dispose() : void
+    - vertices() : float[]
+    - getPolygonCenter() : Vector2
+}
+
+class highscore {
+-generator: FreeTypeFontGenerator
+-parameter: FreeTypeFontGenerator.FreeTypeFontParameter
+-font12: BitmapFont
+-position: Vector2
+-highscoreTally: int
++highscore(x: float)
++update(dt: float)
++getFont(): BitmapFont
++getPosition(): Vector2
++getTally(): int
++dispose()
+}
+
+class miner {
+    - static GRAVITY : int
+    - static MOVEMENT : int
+    - static GRAVITYFLIP : int
+    - position : Vector3
+    - velocity : Vector3
+    - boundsNew : Polygon
+    - minerAnimation : animation
+    - texture : Texture
+    - constants : Constants
+
+    + miner(x: int, y: int)
+    + update(dt: float): void
+    + getPosition(): Vector3
+    + getTexture(): TextureRegion
+    + vertices(): float[]
+    + getPolygonCenter(): Vector2
+    + flip(): void
+    + getBounds(): Polygon
+    + dispose(): void
+}
+
+
+class stalactite {
+    -STALACTITE_WIDTH: int = 180
+    -stalagmite: Texture
+    -stalactite: Texture
+    -posTop: Vector2
+    -posBot: Vector2
+    -rand: Random
+    -boundsBotNew: Polygon
+    -boundsTopNew: Polygon
+    -FLUCTUATIONY: int = 50
+    -FLUCTUATIONX: int = 150
+    -ROCK_GAP: int = 130
+    -LOWEST_OPENING: int = 60
+
+    +stalactite(x: float)
+    +verticesStalagmite(): float[]
+    +verticesStalactite(): float[]
+}
+
+class MyGdxGame {
+  - batch: SpriteBatch
+  - gsm: GameStateManager
+  + width: int
+  + height: int
+  + Title: String
+  .. constructors ..
+  + MyGdxGame()
+  .. methods ..
+  + create() : void
+  + render() : void
+  + dispose() : void
+}
+
+abstract class State {
+  - camera: OrthographicCamera
+  - mouse: Vector3
+  - gsm: GameStateManager
+
+  + State(gsm: GameStateManager)
+  + handleInput(): void
+  + update(dt: float): void
+  + render(sb: SpriteBatch): void
+  + dispose(): void
+}
+
+class GameStateManager {
+    - states: Stack<State>
+    + GameStateManager()
+    + push(state: State): void
+    + pop(): void
+    + set(state: State): void
+    + update(dt: float): void
+    + render(sb: SpriteBatch): void
+}
+
+class GameState {
+    -score: highscore
+    -miner: Miner
+    -mineTexture: MineTexture
+    -coins: List<Coin>
+    -stalactites: List<Stalactite>
+    +getScore(): int
+    +getMiner(): Miner
+    +getMineTexture(): MineTexture
+    +getCoins(): List<Coin>
+    +getStalactites(): List<Stalactite>
+}
+
+class gameOverState {
+    - restartBounds: Rectangle
+    - exitBounds: Rectangle
+    - restartButton: Texture
+    - exitButton: Texture
+    - generator: FreeTypeFontGenerator
+    - parameter: FreeTypeFontGenerator.FreeTypeFontParameter
+    - parameter2: FreeTypeFontGenerator.FreeTypeFontParameter
+    - font1: BitmapFont
+    - font2: BitmapFont
+    - background: Texture
+    - camera: OrthographicCamera
+    - constants: Constants
+
+    + setExitBounds(): Rectangle
+    + setRestartBounds(): Rectangle
+    + gameOverState(gsm: GameStateManager)
+    + handleInput(): void
+    + update(dt: float): void
+    + render(sb: SpriteBatch): void
+    + dispose(): void
+}
+
+class menuState {
+    - playButton: Texture
+    - shopButton: Texture
+    - exitButton: Texture
+    - background: Texture
+    - playButtonR: Rectangle
+    - shopButtonR: Rectangle
+    - exitButtonR: Rectangle
+    - camera: OrthographicCamera
+
+    + menuState(gsm: GameStateManager)
+    + handleInput(): void
+    + update(dt: float): void
+    + render(sb: SpriteBatch): void
+    + dispose(): void
+    - setPlayButtonR(): Rectangle
+    - setShopButtonR(): Rectangle
+    - setExitButtonR(): Rectangle
+}
+
+class shopState {
+    -originalBounds: Rectangle
+    -blueBounds: Rectangle
+    -greenBounds: Rectangle
+    -kingBounds: Rectangle
+    -exitBounds: Rectangle
+    -originalCrate: Texture
+    -blueCrate: Texture
+    -greenCrate: Texture
+    -kingCrate: Texture
+    -exitButton: Texture
+    -generator: FreeTypeFontGenerator
+    -parameter: FreeTypeFontParameter
+    -font1: BitmapFont
+    -background: Texture
+    -camera: OrthographicCamera
+    -constants: Constants
+    -itemID: int
+    -myJDBC: MyJDBC
+    -loginData: LoginData
+    -username: String
+    +shopState(gsm: GameStateManager)
+    -setOriginalBounds(): Rectangle
+    -setBlueBounds(): Rectangle
+    -setGreenBounds(): Rectangle
+    -setKingBounds(): Rectangle
+    -setExitBounds(): Rectangle
+    +handleInput(): void
+    +update(dt: float): void
+    +render(sb: SpriteBatch): void
+}
+
+MyGdxGame -up-> GameStateManager
+
+Constants -up-> LoginData
+Constants -down-> minerTextures
+
+State -up-> GameStateManager
+
+shopState -up-> Constants
+shopState -up-> MyJDBC
+shopState -up-> LoginData
+shopState -up-> GameStateManager
+
+menuState -up-> GameStateManager
+
+GameStateManager -up-> State
+
+GameState -down-> highscore
+GameState -down-> coin
+GameState -down-> miner
+GameState -down-> stalactite
+GameState -up-> GameStateManager
+GameState -up-> LoginData
+GameState -up-> MyJDBC
+
+gameOverState -up-> Constants
+gameOverState -up-> GameStateManager
+
+miner -down-> animation
+
+StartScreen -up-> GameStateManager
+
+RegisterScreen -up-> GameStateManager
+RegisterScreen -up-> MyJDBC
+RegisterScreen -up-> LoginData
+
+LoginScreen -up-> GameStateManager
+LoginScreen -up-> MyJDBC
+LoginScreen -up-> LoginData
+
+
+@enduml

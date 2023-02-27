@@ -19,10 +19,12 @@ public class shopState extends State {
     private Rectangle blueBounds;
     private Rectangle greenBounds;
     private Rectangle kingBounds;
+    private Rectangle exitBounds;
     private Texture originalCrate;
     private Texture blueCrate;
     private Texture greenCrate;
     private Texture kingCrate;
+    private Texture exitButton;
     private FreeTypeFontGenerator generator;
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private BitmapFont font1;
@@ -70,6 +72,15 @@ public class shopState extends State {
         return kingBounds;
     }
 
+    private Rectangle setExitBounds() {
+        exitBounds = new Rectangle();
+        exitBounds.width = 256;
+        exitBounds.height = 128;
+        exitBounds.x = (MyGdxGame.width / 4) * 3;
+        exitBounds.y = (MyGdxGame.height / 2) - ((exitBounds.height) * 2) - 50;
+        return exitBounds;
+    }
+
     public shopState(GameStateManager gsm) {
         super(gsm);
         background = new Texture("pxArt (1).png");
@@ -77,11 +88,13 @@ public class shopState extends State {
         blueCrate = new Texture("Textures/minerBlueCrate.png");
         greenCrate = new Texture("Textures/minerGreenCrate.png");
         kingCrate = new Texture("Textures/minerKingCrate.png");
+        exitButton = new Texture("Textures/exitButton_SMALL.png");
 
         originalBounds = setOriginalBounds();
         blueBounds = setBlueBounds();
         greenBounds = setGreenBounds();
         kingBounds = setKingBounds();
+        exitBounds = setExitBounds();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, MyGdxGame.width, MyGdxGame.height);
@@ -104,16 +117,18 @@ public class shopState extends State {
             camera.unproject(touchPos);
             if (originalBounds.contains(touchPos.x, touchPos.y)) {
                 itemID = 1;
-                myJDBC.buyItem(username,itemID);
+                myJDBC.buyItem(username, itemID);
             } else if (blueBounds.contains(touchPos.x, touchPos.y)) {
                 itemID = 2;
-                myJDBC.buyItem(username,itemID);
+                myJDBC.buyItem(username, itemID);
             } else if (greenBounds.contains(touchPos.x, touchPos.y)) {
                 itemID = 3;
-                myJDBC.buyItem(username,itemID);
+                myJDBC.buyItem(username, itemID);
             } else if (kingBounds.contains(touchPos.x, touchPos.y)) {
                 itemID = 4;
-                myJDBC.buyItem(username,itemID);
+                myJDBC.buyItem(username, itemID);
+            } else if (exitBounds.contains(touchPos.x, touchPos.y)) {
+                gsm.set(new menuState(gsm));
             }
         }
     }
@@ -132,6 +147,7 @@ public class shopState extends State {
         sb.draw(blueCrate, blueBounds.x, blueBounds.y);
         sb.draw(greenCrate, greenBounds.x, greenBounds.y);
         sb.draw(kingCrate, kingBounds.x, kingBounds.y);
+        sb.draw(exitButton, exitBounds.x, exitBounds.y);
         font1.draw(sb, "Welcome to the shop!", (MyGdxGame.width / 2) - 450, (MyGdxGame.height / 4) * 3);
         sb.end();
     }

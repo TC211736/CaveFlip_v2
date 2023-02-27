@@ -1,6 +1,6 @@
 package com.mygdx.game.SQL;
 
-import com.badlogic.gdx.graphics.Texture;
+
 
 public class LoginData {
     private static String username;
